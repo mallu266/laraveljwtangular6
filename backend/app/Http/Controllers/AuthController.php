@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\SignUpRequest;
+use App\User;
 
 class AuthController extends Controller {
 
@@ -12,7 +14,7 @@ class AuthController extends Controller {
      * @return void
      */
     public function __construct() {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login','signup']]);
     }
 
     /**
@@ -74,7 +76,13 @@ class AuthController extends Controller {
         ]);
     }
 
-    public function payload(){
+    public function payload() {
         return auth()->payload();
     }
+
+    public function signup(SignUpRequest $request) {
+        $user = User::create($request->all());
+        return $this->login($request);
+    }
+
 }
